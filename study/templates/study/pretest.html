@@ -1,0 +1,151 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <meta charset="UTF-8"> -->
+    <title>Japanese Vocabulary Learning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+            margin: 0;
+        }
+
+        .image-container img {
+            max-width: 300px;
+            max-height: 300px;
+            width: 300px; /* Ensuring a square image */
+            height: 300px; /* Ensuring a square image */
+        }
+
+        .vocabulary-container {
+            margin-top: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .word-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rectangle {
+            padding: 5px 20px;
+            color: white;
+            border-radius: 5px;
+            width: 200px;
+            height: 30px;
+            margin-right: 10px;
+            background-color: #4CAF50; /* Greenish color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .source-word {
+            background-color: #FF9800; /* Orange color */
+        }
+
+        .know-it-button {
+            padding: 5px 10px;
+            background-color: #2196F3; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .know-it-button:hover {
+            background-color: #1976D2; /* Darker blue */
+        }
+
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #F44336; /* Red color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #D32F2F; /* Darker red */
+        }
+    </style>
+</head>
+<body>
+    {% include 'study/navbar.html' %}
+    <div class="image-container">
+        <img src="https://fastly.picsum.photos/id/19/200/300.jpg?hmac=znGSIxHtiP0JiLTKW6bT7HlcfagMutcHfeZyNkglQFM" alt="Random Image"/>
+    </div>
+
+    <div id="words-container">
+        <!-- Words will be loaded here dynamically -->
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <button onclick="navigateQuestion(-1)" class="button">Back</button>
+        <button onclick="navigateQuestion(1)" class="button">Next</button>
+    </div>
+
+
+    <script>
+        var words = JSON.parse('{{ words|escapejs }}');
+
+        function displayWords() {
+            var container = document.getElementById('words-container');
+            container.innerHTML = '';  // Clear existing content
+
+            words.forEach(function(word) {
+                var wordHtml = `
+                    <div class="word-container">
+                        <div class="rectangle">${word.id} ${word.word}</div>
+                        <button class="know-it-button" data-word-id="${word.id}" onclick="markWordAsUnknown(this)">DO NOT KNOW</button>
+                    </div>
+                `;
+                container.innerHTML += wordHtml;
+            });
+}
+
+        function markWordAsUnknown(buttonElement) {
+            var wordId = buttonElement.getAttribute('data-word-id');
+
+            fetch('/study/pretest', {  // Replace with the correct URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ 'word_id': wordId })
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log("Word marked as unknown");
+                    buttonElement.parentElement.style.display = 'none';  // Hide the word
+                }
+            });
+        }
+
+        // Initially display the words
+        displayWords();
+
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+            
+        // Initially display the first question
+    </script>
+
+
+</body>
+</html>

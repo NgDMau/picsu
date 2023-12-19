@@ -1,0 +1,53 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to PICSU</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .welcome-text {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .description {
+            font-size: 1em;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% include 'study/navbar.html' %}
+
+    <div class="container">
+        <h1 class="welcome-text">Welcome to PICSU!</h1>
+        <p class="description">
+            Your ultimate platform for learning and mastering vocabulary. Join us and elevate your language skills.
+        </p>
+        <a href="/user/login" class="button">Login</a>
+        <a href="/user/register" class="button">Register</a>
+    </div>
+</body>
+</html>

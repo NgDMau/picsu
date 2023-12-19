@@ -1,0 +1,55 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PICSU - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .user-info {
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% include 'study/navbar.html' %}
+
+    <div class="container">
+        <h1>Welcome to PICSU</h1>
+
+        <div class="user-info">
+            <h2>User Information</h2>
+            <p><strong>ID:</strong> {{ user_info.username }}</p>
+            <p><strong>Last Test Date:</strong> {{ user_info.last_test_date }}</p>
+            <p><strong>Last Test Score:</strong> {{ user_info.last_test_score }}</p>
+            <!-- Additional user information can be added here -->
+        </div>
+
+        <a href="/pretest" class="button">Step 1: Pretest (Required)</a>
+        <a href="/learning" class="button">Step 2: Start Learning</a>
+        <a href="/testing" class="button">Step 3: Take a Test</a>
+    </div>
+</body>
+</html>

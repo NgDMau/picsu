@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .result-box {
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .result-box h2 {
+            color: #333;
+        }
+    </style>
+</head>
+{% include 'study/navbar.html' %}
+<body>
+    <div class="container">
+        <h1>Your Test Results</h1>
+        <div class="result-box">
+            <h2>Total Answers Chosen:</h2>
+            <p>{{ test_score.total_answers_chosen }}</p>
+        </div>
+        <div class="result-box">
+            <h2>Correct Answers:</h2>
+            <p>{{ test_score.correct_answers_count }}</p>
+        </div>
+        <div class="result-box">
+            <h2>Incorrect Answers:</h2>
+            <p>{{ test_score.incorrect_answers_count }}</p>
+        </div>
+    </div>
+</body>
+</html>
