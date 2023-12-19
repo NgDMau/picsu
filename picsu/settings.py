@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app",
+    "picsu-2581564c76a3.herokuapp.com",
     "localhost"
 ]
 
