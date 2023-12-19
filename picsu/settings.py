@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "localhost"
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app'
+CSRF_TRUSTED_ORIGINS = ['https://c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app',
                         'https://picsu-2581564c76a3.herokuapp.com']
 
 # Application definition
