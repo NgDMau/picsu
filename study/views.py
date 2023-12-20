@@ -121,7 +121,7 @@ def pretest(request):
         # Querying all words that are not in the unknown words
         print("Unknown words ids: ", unknown_words_ids)
         words = Word.objects.exclude(id__in=unknown_words_ids)[:10]
-        print("Words list: ", words)
+        # print("Words list: ", words)
 
         words_data = []
         for word in words:
@@ -149,7 +149,7 @@ def pretest(request):
         if not UserUnknownWord.objects.filter(user=user_profile, word=word).exists():
             UserUnknownWord.objects.create(user=user_profile, word=word)
         
-        print("{} does not know {} {}".format(user.username, word_id, word))
+        # print("{} does not know {} {}".format(user.username, word_id, word))
         return HttpResponse(status=200)
 
 
@@ -168,7 +168,7 @@ def learning(request):
 
         # List all answers id that User already knows
         known_answers = UserKnownAnswer.objects.filter(user=user_profile).values_list('answer', flat=True)
-        print("Known answer: ", known_answers)
+        # print("Known answer: ", known_answers)
 
         questions = Question.objects.exclude(word__original_word__in=unknown_words)[:20]
         
@@ -178,8 +178,9 @@ def learning(request):
             if not UserLearnedWord.objects.filter(user=user, word=question.word).exists():
                 UserLearnedWord.objects.create(user=user, word=question.word)
             unknown_answers = question.correct_answers.exclude(id__in=known_answers)
-            print("Unknown answer: ", unknown_answers)
+            # print("Unknown answer: ", unknown_answers)
             question_dict = {
+                'image_url': question.word.image_url,
                 'word': question.word.original_word,  # Assuming 'original_word' is a field in 'Word' model
                 'answers': [{'id': answer.id ,'text': answer.text} for answer in unknown_answers]  # Assuming 'text' is a field in 'Answer' model
             }

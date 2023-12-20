@@ -85,10 +85,11 @@
 <body>
     {% include 'study/navbar.html' %}
     <div class="image-container">
-        <img src="https://fastly.picsum.photos/id/19/200/300.jpg?hmac=znGSIxHtiP0JiLTKW6bT7HlcfagMutcHfeZyNkglQFM" alt="Random Image"/>
+        <img id="word_img" alt="Loading image..."/>
     </div>
 
     <div class="vocabulary-container" id="questions-container">
+        
         <!-- Source Word (Chinese or English) -->
         <div class="word-container">
             <div class="rectangle source-word" id="source-word">Source Word</div>
@@ -146,6 +147,7 @@
         function displayQuestion() {
             var question = questions[currentQuestionIndex];
             var container = document.getElementById('questions-container');
+            var image = document.getElementById('word_img');
 
             var source_word = document.getElementById('source-word');
             var target_word = document.getElementById('target-word');
@@ -157,9 +159,10 @@
             // target_word.innerHTML = question.english_meaning || question.chinese_meaning;
             
             
-    
+            image.src = question.image_url;
             // Construct the question HTML
             var htmlContent = `<div class="rectangle source-word">${question.word}</div>`;
+
             question.answers.forEach(function(answer) {
                 if (!knownSynonyms.has(answer.id.toString())) {
                     htmlContent += `<div class="word-container">

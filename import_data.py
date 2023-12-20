@@ -12,10 +12,10 @@ def import_data(excel_path):
     sheet = workbook.active
 
     for row in sheet.iter_rows(min_row=2, values_only=True):  # Assuming first row is header
-        word_text, synonym1, synonym2, synonym3 = row
+        word_text, synonym1, synonym2, synonym3, chinese_meaning, english_meaning, image_url = row
 
         # Create Word instance
-        word, created = Word.objects.get_or_create(original_word=word_text)
+        word, created = Word.objects.get_or_create(original_word=word_text, english_meaning=english_meaning, chinese_meaning=chinese_meaning, image_url=image_url)
 
         # Create Question instance
         question = Question.objects.create(word=word)
@@ -27,6 +27,6 @@ def import_data(excel_path):
                 question.correct_answers.add(answer)
 
 if __name__ == "__main__":
-    path_to_excel = 'Word_list.xlsx'  # Update this path
+    path_to_excel = 'Vocabulary_PICSU.xlsx'  # Update this path
     print("Running...")
     import_data(path_to_excel)

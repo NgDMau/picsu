@@ -6,6 +6,7 @@ class Word(models.Model):
     original_word = models.CharField(max_length=100)
     english_meaning = models.CharField(max_length=100)
     chinese_meaning = models.CharField(max_length=100)
+    image_url = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return self.original_word
