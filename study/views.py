@@ -181,6 +181,8 @@ def learning(request):
             # print("Unknown answer: ", unknown_answers)
             question_dict = {
                 'image_url': question.word.image_url,
+                'chinese_meaning': question.word.chinese_meaning,
+                'english_meaning': question.word.english_meaning,
                 'word': question.word.original_word,  # Assuming 'original_word' is a field in 'Word' model
                 'answers': [{'id': answer.id ,'text': answer.text} for answer in unknown_answers]  # Assuming 'text' is a field in 'Answer' model
             }

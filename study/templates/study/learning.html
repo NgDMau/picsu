@@ -13,10 +13,10 @@
         }
 
         .image-container img {
-            max-width: 300px;
-            max-height: 300px;
-            width: 300px; /* Ensuring a square image */
-            height: 300px; /* Ensuring a square image */
+            max-width: 250px;
+            max-height: 250px;
+            width: 250px; /* Ensuring a square image */
+            height: 250px; /* Ensuring a square image */
         }
 
         .vocabulary-container {
@@ -96,7 +96,10 @@
         </div>
         <!-- Target Word (Japanese) -->
         <div class="word-container">
-            <div class="rectangle" id="target-word">Target Word</div>
+            <div class="rectangle" id="english-word">English Word</div>
+        </div>
+        <div class="word-container">
+            <div class="rectangle" id="chinese-word">Chinese Word</div>
         </div>
         <!-- Synonyms (Japanese) with "Know It" Buttons -->
         <div class="word-container">
@@ -161,7 +164,9 @@
             
             image.src = question.image_url;
             // Construct the question HTML
-            var htmlContent = `<div class="rectangle source-word">${question.word}</div>`;
+            var htmlContent = `<div class="rectangle source-word">${question.word}</div>
+            <div class="rectangle english-word">${question.english_meaning}</div><br>
+            <div class="rectangle chinese-word">${question.chinese_meaning}</div><br>`;
 
             question.answers.forEach(function(answer) {
                 if (!knownSynonyms.has(answer.id.toString())) {

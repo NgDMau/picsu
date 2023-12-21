@@ -12,13 +12,6 @@
             margin: 0;
         }
 
-        .image-container img {
-            max-width: 300px;
-            max-height: 300px;
-            width: 300px; /* Ensuring a square image */
-            height: 300px; /* Ensuring a square image */
-        }
-
         .vocabulary-container {
             margin-top: 20px;
             text-align: center;
@@ -26,6 +19,7 @@
         }
 
         .word-container {
+            margin-top: 10px;
             margin-bottom: 10px;
             display: flex;
             justify-content: center;
@@ -64,7 +58,14 @@
         }
 
         .navigation-buttons {
-            margin-top: 20px;
+            margin-top: 10px;
+            position: fixed; /* Fixed positioning relative to the viewport */
+            bottom: 0; /* Align to the bottom of the viewport */
+            width: 100%; /* Full width to ensure it spans across the screen */
+            height: 35px;
+            background: #f4f4f4; /* Background color, can be changed as needed */
+            padding: 10px 0; /* Some padding to give space above and below the buttons */
+            text-align: center; /* Center the buttons if they don't span the full width */
         }
 
         .button {
@@ -80,22 +81,49 @@
         .button:hover {
             background-color: #D32F2F; /* Darker red */
         }
+
+        #words-container {
+            position: fixed;
+            top: 350px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 400px;
+            width: 100%; /* Full width - ensures it's centered regardless of screen width */
+            overflow: auto;
+            text-align: center; /* Center-align the text */
+            z-index: 100; /* Ensure it's above other content */
+        }
+
+        .instruction-container {
+            position: fixed;
+            top: 60px; /* Below the navbar, adjust if your navbar is a different height */
+            width: 100%;
+            height: 100px; /* Adjust based on your content */
+            text-align: center;
+            z-index: 100; /* Ensure it's above other content */
+            /* Other styling */
+        }
+
+
+        
     </style>
 </head>
 <body>
     {% include 'study/navbar.html' %}
-    <div class="image-container">
-        <img src="https://fastly.picsum.photos/id/19/200/300.jpg?hmac=znGSIxHtiP0JiLTKW6bT7HlcfagMutcHfeZyNkglQFM" alt="Random Image"/>
-    </div>
 
-    <div id="words-container">
-        <!-- Words will be loaded here dynamically -->
+    <div class="instruction-container">
+        <h1>Choose all words that you <u>DO NOT KNOW</u></h1>
     </div>
+    <div id="words-container">
+            <!-- Words will be loaded here dynamically -->
+    </div>
+    
 
     <!-- Navigation Buttons -->
     <div class="navigation-buttons">
-        <button onclick="navigateQuestion(-1)" class="button">Back</button>
-        <button onclick="navigateQuestion(1)" class="button">Next</button>
+        <!-- <button onclick="navigateQuestion(-1)" class="button">Back</button>
+        <button onclick="navigateQuestion(1)" class="button">Next</button> -->
+        <button class="button">If something is not clear, please ask the Project Investigator as soon as possible!</button>
     </div>
 
 
