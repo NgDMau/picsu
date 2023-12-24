@@ -66,6 +66,12 @@
             color: #555; /* Slightly lighter text for the body */
         }
 
+        .inactive {
+            pointer-events: none; /* Disables clicking */
+            cursor: default;
+            color: grey; /* Change color to indicate inactivity */
+        }
+
     </style>
 </head>
 
@@ -79,23 +85,24 @@
         <div class="user-info">
             <h2>User Information</h2>
             <p><strong>ID:</strong> {{ user_info.username }}</p>
-            <p><strong>Last Test Date:</strong> {{ user_info.last_test_date }}</p>
+            <p><strong>PICSU & Flashcard Sets:</strong> {{ user_info.picsu_dict }} {{ user_info.flashcard_dict }}</p>
             <!-- <p><strong>Last Test Score:</strong> {{ user_info.last_test_score }}</p> -->
             <!-- Additional user information can be added here -->
         </div>
+        <a href="/pretest" class="button">Step 1: Pretest <b  style="color: red">(Required)</b></a>
         <h2>Day 1:</h2>
-        <a href="/pretest" class="button">Step 1: Pretest (Required)</a>
-        <a href="/learning" class="button">Step 2: PICSU Learning</a>
-        <a href="/testing" class="button">Step 3: PICSU Test</a>
+        <!-- <a href="/pretest" class="button">Step 1: Pretest <b  style="color: red">(Required)</b></a> -->
+        <a href="/learning/picsu" class="button">Step 2: PICSU Learning</a>
+        <a href="/first_test/picsu" class="button">Step 3: PICSU Test</a>
         <br>
         <h5></h5>
         <h4></h4>
-        <a href="/flashcard_learning" class="button">Step 4: Flashcard Learning</a>
-        <a href="/flashcard_testing" class="button">Step 5: Flashcard Test</a>
+        <a href="/learning/flashcard" class="button">Step 4: Flashcard Learning</a>
+        <a href="/first_test/flashcard" class="button">Step 5: Flashcard Test</a>
         <br>
         <h2>Day 2:</h2>
-        <a href="/testing" class="button">Step 1: PICSU Retention Test</a>
-        <a href="/testing" class="button">Step 2: Flashcard Retention Test</a>
+        <a href="/retention_test/picsu" class="button">Step 1: PICSU Retention Test</a>
+        <a href="/retention_test/flashcard" class="button">Step 2: Flashcard Retention Test</a>
 
 
 

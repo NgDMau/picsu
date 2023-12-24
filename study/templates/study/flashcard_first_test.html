@@ -163,7 +163,7 @@
 
     <h1>Choose synonyms for each word below</h1>
 
-    <form action="{% url 'picsu-retention-test' %}" method="post">
+    <form action="{% url 'flashcard-first-test' %}" method="post">
         {% csrf_token %}
         {% for question in test_questions %}
             <div class="question-container">

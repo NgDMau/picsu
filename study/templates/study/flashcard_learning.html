@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Japanese Synonyms Learning</title>
+    <style>
+        /* Base page styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, lightblue, pink); /* Gradient background */
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Navbar inclusion */
+        
+
+        /* Card styling */
+        .card-container {
+            /* perspective: 500px; */
+            margin-top: 80px; /* Adjust based on navbar height */
+        }
+
+        .card {
+            width: 400px; /* Adjust as needed */
+            height: 200px; /* Adjust as needed */
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .card-face.front {
+            background: white;
+        }
+
+        .card-face.back {
+            background: #f9f9f9;
+            transform: rotateY(180deg);
+        }
+
+        .know-it-button {
+            padding: 5px 10px;
+            margin-left: 20px;
+            background-color: #2196F3; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .know-it-button:hover {
+            background-color: #1976D2; /* Darker blue */
+        }
+
+        /* Navigation buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 70px;
+            padding: 20px;
+            top: 100px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 20px;
+            background-color: #ff4081; /* Pink color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none; /* If using <a> tags */
+        }
+
+        .button:hover {
+            background-color: #f50057; /* Slightly darker pink on hover */
+        }
+
+    </style>
+</head>
+<body>
+    {% include 'study/navbar.html' %}
+    <div class="card-container">
+        <div class="card" onclick="this.classList.toggle('is-flipped')">
+            <div class="card-face front">
+                <h3 id="source_word">Source Word</h3>
+                <p id="english_meaning">English Meaning</p>
+                <p id="chinese_meaning">Chinese Meaning</p>
+            </div>
+            <div class="card-face back" id="synonyms_container">
+                <h4>Synonyms/同义词</h4>
+                <p>Synonym 1</p>
+                <h5></h5>
+                <p>Synonym 2</p>
+                <h5></h5>
+                <p>Synonym 3</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation-buttons">
+        <a class="button" onClick="previousCard()">Back</a>
+        <a class="button" onClick="nextCard()">Next</a>
+    </div>
+
+    <script>
+        var flashcards = JSON.parse('{{ questions|escapejs }}');
+        var knownSynonyms = new Set();
+
+        var currentCardIndex = 0; // Index of the currently displayed flashcard
+
+        function updateFlashcard() {
+            // Get current flashcard data
+            var flashcard = flashcards[currentCardIndex];
+
+            // Update the front of the card
+            document.getElementById("source_word").innerText = flashcard.word;
+            document.getElementById("english_meaning").innerText = "English: " + flashcard.english_meaning;
+            document.getElementById("chinese_meaning").innerText = "中文: " +  flashcard.chinese_meaning;
+
+            // Update the back of the card with synonyms
+            var synonymsContainer = document.getElementById("synonyms_container");
+            synonymsContainer.innerHTML = ''; // Clear previous synonyms
+
+            flashcard.answers.forEach(function(synonym) {
+                if (!knownSynonyms.has(synonym.id.toString())) {
+                    var htmlContent = `
+                    <div>
+                        <span>${synonym.text}</span>
+                        <button class="know-it-button" data-synonym-id="${synonym.id}" onclick="markAsKnown(this, event)">Know It</button>
+                    </div>`;
+                    synonymsContainer.innerHTML += htmlContent;
+                }
+            });
+        }
+
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcard();
+                resetCard();
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                updateFlashcard();
+                resetCard();
+            }
+        }
+
+        function resetCard() {
+            var card = document.querySelector('.card');
+            card.classList.remove('is-flipped');
+        }
+
+        function markAsKnown(buttonElement, event) {
+            event.stopPropagation();
+
+            var synonymId = buttonElement.getAttribute('data-synonym-id');
+            knownSynonyms.add(synonymId);
+
+            // Example: Send data to the server using Fetch API
+            fetch('/study/learning/flashcard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken() // Function to get CSRF token
+                },
+                body: JSON.stringify({ 'synonym_id': synonymId })
+            })
+            .then(response => {
+                if (response.status == 200) {
+                    // Hide the synonym
+                    console.log("Marked as already known")
+                    buttonElement.parentElement.style.display = 'none';
+                }
+            });
+        }
+
+
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        // Initially display the first card
+        updateFlashcard();
+
+
+
+    </script>
+</body>
+</html>

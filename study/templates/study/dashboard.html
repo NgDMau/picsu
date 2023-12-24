@@ -58,15 +58,27 @@
             <p>Welcome to the control panel</p>
         </div>
         <div class="dashboard-content">
-            <div class="card">
-                <h3>Feature 1</h3>
-                <p>Details about feature 1.</p>
-            </div>
-            <div class="card">
-                <h3>Feature 2</h3>
-                <p>Details about feature 2.</p>
-            </div>
-            <!-- Add more cards as needed -->
+            <!-- Table to display user test scores -->
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Test Type</th>
+                    <th>Total Answers Chosen</th>
+                    <th>Correct Answers</th>
+                    <th>Incorrect Answers</th>
+                    <th>Test Date</th>
+                </tr>
+                {% for score in test_scores %}
+                <tr class="{{ score.type }}">
+                    <td>{{ score.user.username }}</td>
+                    <td>{{ score.type }}</td>
+                    <td>{{ score.total_answers_chosen }}</td>
+                    <td>{{ score.correct_answers_count }}</td>
+                    <td>{{ score.incorrect_answers_count }}</td>
+                    <td>{{ score.test_date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </body>

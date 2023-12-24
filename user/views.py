@@ -10,6 +10,8 @@ def signin(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            if not UserProfile.objects.filter(user=user).exists():
+                user_profile=UserProfile.objects.create(user=user)
             return redirect('home')  # Redirect to 'home' or another appropriate page
     else:
         form = LoginForm()

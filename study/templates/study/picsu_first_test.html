@@ -41,7 +41,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             font-size: 1.2em;
             z-index: 2000; /* Ensure it's above other content */
-            color: black; /*
+            color: black; 
         }
 
 
@@ -128,6 +128,8 @@
 </head>
 <script>
     // Set the time we're counting down to
+    
+
     var countDownDate = new Date(new Date().getTime() + 15 * 60000); // 20 minutes from now
 
     // Update the count down every 1 second
@@ -153,7 +155,9 @@
             document.querySelector('form').submit(); // Submit the form when time is up
         }
     }, 1000);
+
 </script>
+
 <body>
     {% include 'study/navbar.html' %}
     <div id="countdown" class="countdown-timer">
@@ -162,11 +166,13 @@
 
     <h1>Choose synonyms for each word below</h1>
 
-    <form action="{% url 'testing' %}" method="post">
+    <form action="{% url 'picsu-first-test' %}" method="post">
         {% csrf_token %}
         {% for question in test_questions %}
             <div class="question-container">
-                <p>W{{ forloop.counter }}: {{ question.question.word.original_word }}</p>
+                <!-- <p>{{ question.question.word.original_word }}</p> -->
+                <p>W{{ forloop.counter }} 中文: {{ question.question.word.chinese_meaning }}</p>
+                <p>W{{ forloop.counter }} English: {{ question.question.word.english_meaning }}</p>
                 <div class="answers-container"> <!-- Centering container -->
                     <ul>
                         {% for answer in question.answers %}
@@ -185,5 +191,8 @@
 
     <!-- Add any additional HTML or scripts here -->
 </body>
+<script>
+    var questions = JSON.parse('{{ test_questions|escapejs }}');
+    print(questions);
+</script>
 </html>
-

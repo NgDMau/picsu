@@ -63,6 +63,7 @@ class UserTestResponse(models.Model):
 
 class UserTestScore(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=32, null=True)
     total_answers_chosen = models.IntegerField(default=0)
     correct_answers_count = models.IntegerField(default=0)
     incorrect_answers_count = models.IntegerField(default=0)

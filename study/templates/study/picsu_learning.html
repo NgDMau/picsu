@@ -216,8 +216,8 @@
         var syn3 = document.getElementById('syn3');
 
         source_word.innerHTML = question.word;
-        english_meaning.innerHTML = question.english_meaning || "<English Meaning>"
-        chinese_meaning.innerHTML = question.chinese_meaning || "<Chinese Meaning>";
+        english_meaning.innerHTML = "English: " + question.english_meaning || "<English Meaning>"
+        chinese_meaning.innerHTML = "中文: " + question.chinese_meaning || "<Chinese Meaning>";
         
         
         image.src = question.image_url;
@@ -252,7 +252,7 @@
         knownSynonyms.add(synonymId);
 
         // Example: Send data to the server using Fetch API
-        fetch('/study/learning', {
+        fetch('/study/learning/picsu', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
