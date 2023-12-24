@@ -17,16 +17,15 @@
         .container {
             width: 80%;
             margin: auto;
-            padding: 50px;
+            padding: 10px;
             background: white; /* A white background for the content area */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* A subtle shadow for depth */
             border-radius: 8px; /* Rounded corners for the container */
-            margin-top: 80px; /* Space from the top */
+            margin-top: 60px; /* Space from the top */
             /* margin-bottom: 100px; */
+            padding-bottom: 25px;
         }
-        .user-info {
-            margin-bottom: 30px;
-        }
+
         
         .button {
             color: white; /* White text for readability */
@@ -36,9 +35,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-bottom: 50px;
-            /* margin: 5px; */
-            
+            margin-bottom: 20px;            
         }
         
 
@@ -48,10 +45,9 @@
 
         .user-info {
             background: white; /* A light grey background */
-            padding: 20px;
-            margin-bottom: 30px;
+            padding: 2px;
+            margin-bottom: 5px;
             border-radius: 8px; /* Rounded corners */
-            /* box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); An inner shadow for a subtle inset effect */
             text-align: left; /* Align text to the left */
             border: #2c96c8;
             border-style: dashed;
@@ -60,21 +56,21 @@
         .user-info h2 {
             text-align: center; /* Center align text for h2 and p */
             color: #333; /* Darker text for the heading */
-            margin-bottom: 10px; /* Space below the heading */
+            margin-bottom: 5px; /* Space below the heading */
         }
 
         .user-info p {
             text-align: center; /* Center align text for h2 and p */
             font-size: 0.9em; /* Slightly smaller text */
-            line-height: 1.6; /* More readable line spacing */
+            line-height: 1.0; /* More readable line spacing */
             color: #555; /* Slightly lighter text for the body */
         }
 
     </style>
 </head>
-{% include 'study/navbar.html' %}
+
 <body>
-    
+    {% include 'study/navbar.html' %}
 
     <div class="container">
         <h1>Welcome to PICSU</h1>
@@ -87,10 +83,22 @@
             <!-- <p><strong>Last Test Score:</strong> {{ user_info.last_test_score }}</p> -->
             <!-- Additional user information can be added here -->
         </div>
-
+        <h2>Day 1:</h2>
         <a href="/pretest" class="button">Step 1: Pretest (Required)</a>
-        <a href="/learning" class="button">Step 2: Start Learning</a>
-        <a href="/testing" class="button">Step 3: Take a Test</a>
+        <a href="/learning" class="button">Step 2: PICSU Learning</a>
+        <a href="/testing" class="button">Step 3: PICSU Test</a>
+        <br>
+        <h5></h5>
+        <h4></h4>
+        <a href="/flashcard_learning" class="button">Step 4: Flashcard Learning</a>
+        <a href="/flashcard_testing" class="button">Step 5: Flashcard Test</a>
+        <br>
+        <h2>Day 2:</h2>
+        <a href="/testing" class="button">Step 1: PICSU Retention Test</a>
+        <a href="/testing" class="button">Step 2: Flashcard Retention Test</a>
+
+
+
     </div>
 </body>
 </html>

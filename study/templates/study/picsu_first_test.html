@@ -1,0 +1,189 @@
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Japanese Synonyms Test</title>
+    <!-- Add any additional head elements here -->
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, blue, pink); /* Gradient background */
+            padding-top: 60px; /* Space for navbar, adjust if navbar size changes */
+            color: white; /* Text color for better contrast */
+        }
+
+        /* Navbar styles */
+        .navbar {
+            width: 100%;
+            height: 50px; /* Adjust based on actual navbar height */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            /* Add your navbar styling here */
+        }
+
+        /* Add this inside your <style> tag */
+
+        .countdown-timer {
+            position: fixed; /* Makes the timer float */
+            top: 10px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent white */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
+            z-index: 2000; /* Ensure it's above other content */
+            color: black; /*
+        }
+
+
+        /* Form styling */
+        form {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent background for form */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            color: black;
+        }
+
+        /* Question container */
+        div {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Question text */
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        /* Question container */
+        .question-container {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa; /* Light background color for highlighting */
+            border-radius: 8px; /* Rounded corners for a softer look */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        /* Answers container for center alignment */
+        .answers-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left; /* Aligns the content of the list to the left */
+            max-width: 400px; /* Adjust as needed */
+        }
+
+        li {
+            margin: 5px 0;
+            line-height: 1.6; /* More readable line spacing */
+        }
+
+        /* Rest of the CSS remains the same */
+
+
+        /* Submit button styling */
+        button {
+            padding: 10px 20px;
+            background-color: #ff4081; /* Pink color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #f50057; /* Slightly darker pink on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            form {
+                width: 90%;
+                margin: 20px;
+            }
+        }
+
+    </style>
+</head>
+<script>
+    // Set the time we're counting down to
+    var countDownDate = new Date(new Date().getTime() + 15 * 60000); // 20 minutes from now
+
+    // Update the count down every 1 second
+    var countdownFunction = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+        
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+        
+        // Time calculations for minutes and seconds
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Output the result in the element with id="countdown"
+        document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
+        
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(countdownFunction);
+            document.getElementById("countdown").innerHTML = "EXPIRED";
+            document.querySelector('form').submit(); // Submit the form when time is up
+        }
+    }, 1000);
+</script>
+<body>
+    {% include 'study/navbar.html' %}
+    <div id="countdown" class="countdown-timer">
+        START
+    </div>
+
+    <h1>Choose synonyms for each word below</h1>
+
+    <form action="{% url 'testing' %}" method="post">
+        {% csrf_token %}
+        {% for question in test_questions %}
+            <div class="question-container">
+                <p>W{{ forloop.counter }}: {{ question.question.word.original_word }}</p>
+                <div class="answers-container"> <!-- Centering container -->
+                    <ul>
+                        {% for answer in question.answers %}
+                            <li>
+                                <input type="checkbox" name="question_{{ question.question.id }}" value="{{ answer.id }}">
+                                {{ answer.text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+
+        <button type="submit">Submit Test</button>
+    </form>
+
+    <!-- Add any additional HTML or scripts here -->
+</body>
+</html>
+

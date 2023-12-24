@@ -77,21 +77,21 @@ def testing(request):
     if request.method == "GET":
         
         test_questions = create_test_for_user(user)
-        print("Test questions: ", test_questions)
-        return render(request, 'study/testing.html', {'test_questions': test_questions})
+        # print("Test questions: ", test_questions)
+        return render(request, 'study/picsu_testing.html', {'test_questions': test_questions})
     elif request.method == 'POST':
         for key, value_list in request.POST.lists():
             if key.startswith('question_'):
                 question_id = key.split('_')[1]
                 question = Question.objects.get(id=question_id)
-                print("Question: ", question)
+                # print("Question: ", question)
                 # Get correct answers for the question
                 correct_answers = question.correct_answers.all()
 
                 # Get user selected answers
                 user_answers_ids = [int(id) for id in value_list]
                 user_answers = Answer.objects.filter(id__in=user_answers_ids)
-                print("User answers: ", user_answers)
+                # print("User answers: ", user_answers)
                 # Create UserTestResponse
                 response = UserTestResponse.objects.create(user=user, question=question)
                 response.correct_answers.set(correct_answers)
@@ -190,7 +190,7 @@ def learning(request):
 
         questions_json = json.dumps(questions_data)
 
-        return render(request, "study/learning.html", {'questions': questions_json})
+        return render(request, "study/picsu_learning.html", {'questions': questions_json})
 
     elif request.method == 'POST':
         data = json.loads(request.body)
@@ -210,6 +210,14 @@ def learning(request):
         return HttpResponse(status=200)
 
 
+@login_required
+def dashboard(request):
+    if request.method == "GET":
+
+        # Get all user information
+         
+
+        return render(request, "study/dashboard.html", {'questions': ["some questions"]})
 
 
 

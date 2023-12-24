@@ -64,6 +64,9 @@
 <div class="navbar" id="myNavbar">
     <a href="/study/home">Home</a>
     <a href="#settings" onclick="showComingSoonAlert()">Settings</a>
+    {% if user_info.username == "admin" %}
+            <a href="/study/dashboard">Dashboard</a>
+        {% endif %}
     <a href="/user/logout">Logout</a>
     <a href="javascript:void(0);" class="icon" onclick="toggleNavbar()">
         &#9776;

@@ -1,0 +1,277 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <meta charset="UTF-8"> -->
+    <title>Japanese Vocabulary Learning</title>
+    <style>
+        /* body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+            margin: 0;
+        } */
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .image-container img {
+            padding-top: 50px;
+            top: 30px;
+            max-width: 250px;
+            max-height: 250px;
+            width: 250px;
+            height: 250px;
+        } 
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px; /* Adjust as needed */
+            margin-top: 50px; /* Adjust based on the navbar height */
+            background-color: white; /* Just for visibility */
+            position: fixed;
+            width: 100%;
+            z-index: 500;
+        }
+
+        /* .sources-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } */
+
+        /* Sources Container Styles */
+        .sources-container {
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 300px; /* Adjust this based on the image container's height */
+            width: 100%;
+            z-index: 500;
+        }
+
+
+        /* .synonyms-container {
+            margin-top: 20px;
+            text-align: center;
+            display: inline-block;
+        } */
+
+        /* Synonyms Container Styles */
+        .synonyms-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 380px; /* Adjust this based on the above elements */
+            overflow-y: auto;
+            height: calc(100vh - 450px); /* Adjust based on the total height of the fixed elements */
+        }
+
+        .word-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rectangle {
+            padding: 5px 20px;
+            color: white;
+            border-radius: 5px;
+            width: 200px;
+            height: 30px;
+            margin-right: 10px;
+            background-color: #4CAF50; /* Greenish color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .source-word {
+            background-color: #FF9800; /* Orange color */
+        }
+
+        .know-it-button {
+            padding: 5px 10px;
+            background-color: #2196F3; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .know-it-button:hover {
+            background-color: #1976D2; /* Darker blue */
+        }
+
+        .navigation-buttons {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background-color: #f0f0f0; /* Just for visibility */
+            padding: 10px 0;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #F44336; /* Red color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #D32F2F; /* Darker red */
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .synonyms-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'study/navbar.html' %}
+    <div class="image-container">
+        <img id="word_img" alt="Loading image..."/>
+    </div>
+
+    <div class="sources-container">
+         <!-- Source Word (Japanese)  -->
+        <div class="word-container">
+            <div class="rectangle source-word" id="source-word">Source Word</div>
+        </div>
+        <!-- Target Word (Chinese or English) -->
+        <div class="word-container">
+            <div class="rectangle" id="english-word">English Word</div>
+        </div>
+        <div class="word-container">
+            <div class="rectangle" id="chinese-word">Chinese Word</div>
+        </div>
+    </div>
+
+    <div class="synonyms-container" id="questions-container">        
+
+        <!-- Synonyms (Japanese) with "Know It" Buttons -->
+        <div class="word-container">
+            <div class="rectangle" id="syn1">Synonym 1</div>
+            <button class="know-it-button" onclick="this.parentElement.style.display='none'">Know It</button>
+        </div>
+        <div class="word-container">
+            <div class="rectangle" id="syn2">Synonym 2</div>
+            <button class="know-it-button" onclick="this.parentElement.style.display='none'">Know It</button>
+        </div>
+        <div class="word-container">
+            <div class="rectangle" id="syn3">Synonym 3</div>
+            <button class="know-it-button" onclick="this.parentElement.style.display='none'">Know It</button>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <button onclick="navigateQuestion(-1)" class="button">Back</button>
+        <button onclick="navigateQuestion(1)" class="button">Next</button>
+    </div>
+</body>
+
+
+<script>
+    var questions = JSON.parse('{{ questions|escapejs }}');
+    var currentQuestionIndex = 0;
+
+    var knownSynonyms = new Set();
+
+    console.log(questions)
+
+    function displayQuestion() {
+        var question = questions[currentQuestionIndex];
+        var container = document.getElementById('questions-container');
+        var image = document.getElementById('word_img');
+
+        var source_word = document.getElementById('source-word');
+        var chinese_meaning= document.getElementById('chinese-word');
+        var english_meaning = document.getElementById('english-word');
+
+        var syn1 = document.getElementById('syn1');
+        var syn2 = document.getElementById('syn2');
+        var syn3 = document.getElementById('syn3');
+
+        source_word.innerHTML = question.word;
+        english_meaning.innerHTML = question.english_meaning || "<English Meaning>"
+        chinese_meaning.innerHTML = question.chinese_meaning || "<Chinese Meaning>";
+        
+        
+        image.src = question.image_url;
+        // Construct the question HTML
+        // var htmlContent = `<div class="rectangle source-word">${question.word}</div>
+        // <div class="rectangle english-word">${question.english_meaning}</div><br>
+        // <div class="rectangle chinese-word">${question.chinese_meaning}</div><br>`;
+        var htmlContent = ``
+
+        question.answers.forEach(function(answer) {
+            if (!knownSynonyms.has(answer.id.toString())) {
+                htmlContent += `<div class="word-container">
+                                    <div class="rectangle">${answer.id}  ${answer.text}</div>
+                                    <button class="know-it-button" data-synonym-id="${answer.id}" onclick="markAsKnown(this)">Know It</button>
+                                </div>`;
+                    }
+        });
+
+        // Set the inner HTML of the container
+        container.innerHTML = htmlContent;
+    }
+
+    function navigateQuestion(direction) {
+        currentQuestionIndex += direction;
+        if (currentQuestionIndex >= 0 && currentQuestionIndex < questions.length) {
+            displayQuestion();
+        }
+    }
+
+    function markAsKnown(buttonElement) {
+        var synonymId = buttonElement.getAttribute('data-synonym-id');
+        knownSynonyms.add(synonymId);
+
+        // Example: Send data to the server using Fetch API
+        fetch('/study/learning', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() // Function to get CSRF token
+            },
+            body: JSON.stringify({ 'synonym_id': synonymId })
+        })
+        .then(response => {
+            if (response.status == 200) {
+                // Hide the synonym
+                console.log("Marked as already known")
+                buttonElement.parentElement.style.display = 'none';
+            }
+        });
+    }
+
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+
+    // Initially display the first question
+    displayQuestion();
+</script>
+</html>
