@@ -5,6 +5,8 @@ from study.models import Word, Answer
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    picsu_dict = models.CharField(max_length=32, null=True, blank=True)
+    flashcard_dict = models.CharField(max_length=32, null=True, blank=True)
     unknown_words = models.ManyToManyField(Word, through='UserUnknownWord')
 
     def __str__(self):

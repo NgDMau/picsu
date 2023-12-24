@@ -109,6 +109,7 @@ def testing(request):
 
 @login_required
 def pretest(request):
+    # CREATE A SET OF VOCABULARY FOR USER TO LEARN
     if request.method == "GET":
         user = request.user
 

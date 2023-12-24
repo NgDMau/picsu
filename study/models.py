@@ -7,6 +7,7 @@ class Word(models.Model):
     english_meaning = models.CharField(max_length=100)
     chinese_meaning = models.CharField(max_length=100)
     image_url = models.CharField(max_length=512, null=True, blank=True)
+    learning_method = models.CharField(max_length=32, null=True)
 
     def __str__(self):
         return self.original_word
@@ -23,6 +24,7 @@ class Answer(models.Model):
 class Question(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     correct_answers = models.ManyToManyField(Answer)
+    group = models.CharField(max_length=32, null=True)
 
     def __str__(self):
         return f"Question for {self.word.original_word}"
@@ -40,6 +42,7 @@ class UserLearnedWord(models.Model):
 
 class UserTest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=32, null=True)
     date_taken = models.DateTimeField(auto_now_add=True)
 
 
