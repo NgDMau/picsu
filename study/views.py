@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 import json
 import random
 from .models import Question, Word, Answer, UserLearnedWord, UserTestResponse, UserTestScore
@@ -78,10 +78,12 @@ def calculate_and_store_user_score(user, type):
     )
     return test_score
 
+    
+
 @login_required
 def result(request, test_score_id):
-    test_score = UserTestScore.objects.get(id=test_score_id, user=request.user)
-    return render(request, 'study/results.html', {'test_score': test_score})
+    # test_score = UserTestScore.objects.get(id=test_score_id, user=request.user)
+    return render(request, 'study/results.html')
 
 
 
