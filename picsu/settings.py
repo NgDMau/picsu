@@ -28,11 +28,13 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app",
     "picsu-2581564c76a3.herokuapp.com",
-    "localhost"
+    "localhost",
+    "237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app',
-                        'https://picsu-2581564c76a3.herokuapp.com']
+                        'https://picsu-2581564c76a3.herokuapp.com',
+                        'https://237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app']
 
 # Application definition
 
