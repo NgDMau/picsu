@@ -52,7 +52,8 @@ def create_test_for_user(user, learning_method):
         random_answers = list(Answer.objects.filter(word__learning_method=learning_method).exclude(question=question).order_by('?')[:5])
         
         for ans in random_answers:
-            print("rand ans id: ", ans.id)
+            # print("rand ans id: ", ans.id)
+            print("rand ans word id: ", ans.word.id)
         
         all_answers = correct_answers + random_answers
 
