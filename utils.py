@@ -22,36 +22,33 @@ def import_data(excel_path, learning_method):
             word, created = Word.objects.get_or_create(original_word=word_text, english_meaning=english_meaning, chinese_meaning=chinese_meaning, image_url=image_url, learning_method='picsu')
             all_words.append(word)
             # Create Question instance
-            
-
-        random.shuffle(all_words)
-        p1, p2 = all_words[10:90], all_words[30:110]
-        print("p1 p2 ", len(p1), len(p2))
-
-        # p1 = random.sample(all_words, min(80, len(all_words)))
-        # p2 = random.sample(all_words, min(80, len(all_words)))
-
-        for word in p1:
             question = Question.objects.create(word=word, group='p1')
             # Create Answer instances and link to Question
             for synonym in [synonym1, synonym2, synonym3]:
                 if synonym:  # Skip blank synonyms
                     answer = Answer.objects.create(word=word, text=synonym)
                     question.correct_answers.add(answer)
+            
 
-            # if not Question.objects.filter(word=word).exists():
-            #     print("Word for p1 doesnt exist!")
-            # else:
-            #     Question.objects.filter(word=word).update(group='p1')
-            #     print("Inserted for p1")
+        random.shuffle(all_words)
+        p1, p2 = all_words[0:60], all_words[60:120]
+        print("p1 p2 ", len(p1), len(p2))
+
+        # p1 = random.sample(all_words, min(80, len(all_words)))
+        # p2 = random.sample(all_words, min(80, len(all_words)))
+
+        for word in p1:
+            if not Question.objects.filter(word=word).exists():
+                print("Word for p1 doesnt exist!")
+            else:
+                Question.objects.filter(word=word).update(group='p1')
+                print("Inserted for p1")
         for word in p2:
-            question = Question.objects.create(word=word, group='p2')
-            # Create Answer instances and link to Question
-            for synonym in [synonym1, synonym2, synonym3]:
-                if synonym:  # Skip blank synonyms
-                    answer = Answer.objects.create(word=word, text=synonym)
-                    question.correct_answers.add(answer)
-            print("P2")
+            if not Question.objects.filter(word=word).exists():
+                print("Word for p2 doesnt exist!")
+            else:
+                Question.objects.filter(word=word).update(group='p2')
+                print("Inserted for p2")
 
         print("LEN Q P1-P2: ", len(Question.objects.filter(group='p1')), len(Question.objects.filter(group='p2')))
 
@@ -99,4 +96,4 @@ if __name__ == "__main__":
     flashcard_dict_path = 'Vocabulary_Flashcard.xlsx'
     print("Running...")
     import_data(picsu_dict_path, "picsu")
-    import_data(flashcard_dict_path, "flashcard")
+    # import_data(flashcard_dict_path, "flashcard")
