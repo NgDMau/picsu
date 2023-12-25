@@ -167,7 +167,7 @@ def learning_picsu(request):
         user_picsu_dict = user_profile.picsu_dict
         user_flashcard_dict = user_profile.flashcard_dict
 
-        unknown_words = UserUnknownWord.objects.filter(user=user_profile).values_list('word', flat=True)
+        unknown_words = UserUnknownWord.objects.filter(user=user_profile).values_list('word__original_word', flat=True)
 
         # List all answers id that User already knows
         known_answers = UserKnownAnswer.objects.filter(user=user_profile).values_list('answer', flat=True)
@@ -267,7 +267,7 @@ def learning_flashcard(request):
         user_profile=UserProfile.objects.get(user=user)
         user_flashcard_dict = user_profile.flashcard_dict
 
-        unknown_words = UserUnknownWord.objects.filter(user=user_profile).values_list('word', flat=True)
+        unknown_words = UserUnknownWord.objects.filter(user=user_profile).values_list('word__original_word', flat=True)
 
         # List all answers id that User already knows
         known_answers = UserKnownAnswer.objects.filter(user=user_profile).values_list('answer', flat=True)
