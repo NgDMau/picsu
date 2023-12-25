@@ -31,14 +31,17 @@ def create_test_for_user(user, learning_method):
     user_picsu_dict = user_profile.picsu_dict
     user_flashcard_dict = user_profile.flashcard_dict
     # Step 1: Get questions with words the user has learned
+    print(user_picsu_dict, user_flashcard_dict)
+
     learned_words_ids = UserLearnedWord.objects.filter(user=user).values_list('word', flat=True)
+    
     if learning_method == "picsu":
         questions_with_learned_words = Question.objects.filter(group=user_picsu_dict, word__id__in=learned_words_ids, word__learning_method=learning_method)
     elif learning_method == "flashcard":
         questions_with_learned_words = Question.objects.filter(group=user_flashcard_dict, word__id__in=learned_words_ids, word__learning_method=learning_method)
     else:
         print("WRONG LEARNING METHOD")
-        return
+        # return
 
     test_questions = []
 
@@ -46,7 +49,11 @@ def create_test_for_user(user, learning_method):
     for question in questions_with_learned_words:
         print("Question id: ", question.id)
         correct_answers = list(question.correct_answers.all())
-        random_answers = list(Answer.objects.exclude(question=question).order_by('?')[:5])
+        random_answers = list(Answer.objects.filter(word__learning_method=learning_method).exclude(question=question).order_by('?')[:5])
+        
+        for ans in random_answers:
+            print("rand ans id: ", ans.id)
+        
         all_answers = correct_answers + random_answers
 
         # Step 3: Shuffle the combined answers
@@ -314,7 +321,7 @@ def first_test_flashcard(request):
     if request.method == "GET":
         
         test_questions = create_test_for_user(user, learning_method="flashcard")
-        # print("Test questions: ", test_questions)
+        print("Test questions: ", len(test_questions))
         return render(request, 'study/flashcard_first_test.html', {'test_questions': test_questions})
     elif request.method == 'POST':
         for key, value_list in request.POST.lists():
@@ -385,7 +392,7 @@ def retention_test_flashcard(request):
     if request.method == "GET":
         
         test_questions = create_test_for_user(user, learning_method="flashcard")
-        # print("Test questions: ", test_questions)
+        print("Test questions: ", len(test_questions))
         return render(request, 'study/flashcard_retention_test.html', {'test_questions': test_questions})
     elif request.method == 'POST':
         for key, value_list in request.POST.lists():
