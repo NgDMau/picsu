@@ -8,6 +8,7 @@ import json
 import random
 from .models import Question, Word, Answer, UserLearnedWord, UserTestResponse, UserTestScore
 from user.models import UserProfile, UserKnownAnswer, UserUnknownWord
+from .utils import group_test_responses
 
 
 def index(request):
@@ -395,6 +396,7 @@ def retention_test_flashcard(request):
         test_questions = create_test_for_user(user, learning_method="flashcard")
         print("Test questions: ", len(test_questions))
         return render(request, 'study/flashcard_retention_test.html', {'test_questions': test_questions})
+    
     elif request.method == 'POST':
         for key, value_list in request.POST.lists():
             if key.startswith('question_'):
@@ -422,6 +424,13 @@ def retention_test_flashcard(request):
 
 
 
+def max_quests(test_type):
+    if test_type == "first_test_picsu" or test_type == "retention_test_picsu":
+        return 60
+    elif test_type == "first_test_flashcard" or test_type == "retention_test_flashcard":
+        return 80
+    else:
+        return 999
 
 
 @login_required
@@ -429,11 +438,12 @@ def dashboard(request):
     if request.method == "GET":
 
         # Get all user information
-        test_scores = UserTestScore.objects.all().select_related('user')
+        # test_scores = UserTestScore.objects.all().select_related('user')
 
-         
+        all_user_test_results = group_test_responses()
+        context = {'all_user_test_results': all_user_test_results}
 
-        return render(request, "study/dashboard.html", {'test_scores': test_scores})
+        return render(request, "study/dashboard.html", context)
 
 
 

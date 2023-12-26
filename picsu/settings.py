@@ -131,12 +131,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# settings.py
+
+
 
 USE_I18N = True
 
 USE_TZ = True
 
+TIME_ZONE = 'Asia/Tokyo'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
