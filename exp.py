@@ -8,86 +8,92 @@ django.setup()
 
 from study.models import Word, Answer, Question, UserTestResponse, UserTestScore
 from django.contrib.auth.models import User
+from django.db import IntegrityError
+
 from datetime import timedelta
 
-WINDOW_TIME=1 # (in seconds)
-PICSU_MAX_QUESTS = 60
-FLASHCARD_MAX_QUESTS = 80
+import csv
+from study.models import UserTestResponse
 
-def max_quests(test_type):
-    if test_type == "first_test_picsu" or test_type == "retention_test_picsu":
-        return 60
-    elif test_type == "first_test_flashcard" or test_type == "retention_test_flashcard":
-        return 80
-    else:
-        return 999
+# Function to export UserTestResponse data
+def export_user_test_responses():
+    with open('study_usertestresponse.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        # Write headers
+        writer.writerow(['ID', 'User ID', 'Question ID', 'Test Date'])
+        # Write data rows
+        for utr in UserTestResponse.objects.all():
+            writer.writerow([utr.id, utr.user_id, utr.question_id, utr.test_date])
 
-def group_test_responses():
-    for user in User.objects.all():
-        # Fetch all responses for the user
-        responses = UserTestResponse.objects.filter(user=user).order_by('test_date')
+# Function to export correct answers data
+def export_correct_answers():
+    with open('study_usertestresponse_correct_answers.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        # Write headers
+        writer.writerow(['UserTestResponse ID', 'Answer ID'])
+        # Write data rows
+        for utr in UserTestResponse.objects.all():
+            for answer in utr.correct_answers.all():
+                writer.writerow([utr.id, answer.id])
 
-        current_test_responses = []
-        current_test_start_time = None
+# Function to export user answers data
+def export_user_answers():
+    with open('study_usertestresponse_user_answers.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        # Write headers
+        writer.writerow(['UserTestResponse ID', 'Answer ID'])
+        # Write data rows
+        for utr in UserTestResponse.objects.all():
+            for answer in utr.user_answers.all():
+                writer.writerow([utr.id, answer.id])
 
-        for response in responses:
+# Run export functions
 
-            if (not current_test_start_time or response.test_date - current_test_start_time <= timedelta(minutes=WINDOW_TIME)):
-                # This response is part of the current test
-                current_test_responses.append(response)
-                if not current_test_start_time:
-                    current_test_start_time = response.test_date
+def import_csv_to_model(csv_filepath, model, unique_fields):
+    """
+    Import CSV data into the given model.
+
+    :param csv_filepath: Path to the CSV file to import.
+    :param model: Django model to which the data will be imported.
+    :param unique_fields: List of fields that are used to identify duplicates.
+    """
+    with open(csv_filepath, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Check for identical row
+            if not model.objects.filter(**row).exists():
+                # Check for all fields identical except ID
+                query = {field: row[field] for field in unique_fields}
+                if not model.objects.filter(**query).exists():
+                    try:
+                        # Create a new object and save it
+                        obj = model(**row)
+                        obj.save()
+                    except IntegrityError as e:
+                        # If only IDs conflict, create a new ID then insert
+                        row.pop('id', None)  # Remove conflicting ID if necessary
+                        model.objects.create(**row)
+                else:
+                    print(f"Skipped identical row: {row}")
             else:
-                # This response is part of a new test
-                process_test_group(user, current_test_responses)
-
-                current_test_responses = [response]
-                current_test_start_time = response.test_date
-
-        # Don't forget to process the last group
-        if current_test_responses:
-            process_test_group(user, current_test_responses)
+                print(f"Skipped duplicate row: {row}")
 
 
-
-def process_test_group(user, responses):
-    # Assuming the first response's test_date represents the start of the test
-    test_start_time = responses[0].test_date
-
-    # Find the UserTestScore that corresponds to this test
-    # Adjust the timedelta if needed to better match how your tests are separated
-    test_score = UserTestScore.objects.filter(
-        user=user,
-        test_date__range=(test_start_time, test_start_time + timedelta(minutes=WINDOW_TIME))
-    ).first()
-
-    if test_score:
-        total_questions = len(responses)
-        questions_with_correct_answer = 0
-
-        for response in responses:
-            # Check if the user has selected at least one correct answer for the question
-            if set(response.correct_answers.all()) & set(response.user_answers.all()):
-                questions_with_correct_answer += 1
-
-        total_possible_correct_answers = sum([response.question.correct_answers.count() for response in responses])
-        total_answers_chosen = sum([len(response.user_answers.all()) for response in responses])
-        total_actual_correct_answers = sum([len(set(response.correct_answers.all()) & set(response.user_answers.all())) for response in responses if set(response.correct_answers.all()) & set(response.user_answers.all())])
-        total_false_positives = sum([len(set(response.user_answers.all()) - set(response.correct_answers.all())) for response in responses])
-
-        
-        # Decorated printing
-        print("-" * 80)  # Print a separator line
-        print(f"User: {user.username} | Test on: {test_start_time} | Test Type: {test_score.type}")
-        print(f"Questions with at least one correct answer: {questions_with_correct_answer} out of {total_questions} (max {max_quests(test_score.type)})")
-        print(f"Participant's Correct Answers: {total_actual_correct_answers} out of {total_answers_chosen} out of {total_possible_correct_answers}")
-        print(f"XXX Participant's Incorrect Answers: {total_false_positives} out of {total_answers_chosen} out of {total_possible_correct_answers}")
-        print(f"Total Answers Chosen: {test_score.total_answers_chosen} | Total Correct Answers: {test_score.correct_answers_count} | Total Incorrect Answers: {test_score.incorrect_answers_count}")
-        print("-" * 80)  # End with another separator line
-    else:
-        print(f"No matching UserTestScore found for User: {user.username}, Test on: {test_start_time}")
-
+# Define file paths and unique fields
+user_test_response_csv = './study_usertestresponse.csv'
+correct_answers_csv = './study_usertestresponse_correct_answers.csv'
+user_answers_csv = './study_usertestresponse_user_answers.csv'
 
 if __name__ == "__main__":
     # Run the grouping function
-    group_test_responses()
+    # export_user_test_responses()
+    # export_correct_answers()
+    # export_user_answers()
+    # Import UserTestResponse
+    import_csv_to_model(user_test_response_csv, UserTestResponse, ['user_id', 'question_id', 'test_date'])
+
+    # Import Correct Answers - assuming through model exists or is auto-created by Django
+    import_csv_to_model(correct_answers_csv, UserTestResponse.correct_answers.through, ['usertestresponse_id', 'answer_id'])
+
+    # Import User Answers - assuming through model exists or is auto-created by Django
+    import_csv_to_model(user_answers_csv, UserTestResponse.user_answers.through, ['usertestresponse_id', 'answer_id'])
