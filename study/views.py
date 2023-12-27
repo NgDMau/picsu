@@ -438,12 +438,13 @@ def dashboard(request):
     if request.method == "GET":
 
         # Get all user information
-        # test_scores = UserTestScore.objects.all().select_related('user')
+        test_scores = UserTestScore.objects.all().select_related('user')
 
-        all_user_test_results = group_test_responses()
-        context = {'all_user_test_results': all_user_test_results}
+        # all_user_test_results = group_test_responses()
+        # context = {'all_user_test_results': all_user_test_results}
 
-        return render(request, "study/dashboard.html", context)
+        return render(request, "study/dashboard.html", {'test_scores': test_scores})
+        # return render(request, "study/dashboard.html", context)
 
 
 

@@ -50,7 +50,7 @@
             color: #555;
         }
 
-        table {
+        /* table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
@@ -59,17 +59,17 @@
         th, td {
             text-align: left;
             padding: 8px;
-            border-bottom: 1px solid #ddd; /* Adds a subtle line between rows */
+            border-bottom: 1px solid #ddd;
         }
         
         th {
-            background-color: #f2f2f2; /* Light grey background for headers */
+            background-color: #f2f2f2;
             color: #333;
         }
         
-        tr:hover {background-color: #f5f5f5;} /* Highlight row on hover */
+        tr:hover {background-color: #f5f5f5;}
         
-        tr:nth-child(even) {background-color: #f9f9f9;} /* Zebra striping for rows */
+        tr:nth-child(even) {background-color: #f9f9f9;}  */
     
         
     
@@ -90,22 +90,35 @@
                 <tr>
                     <th>User</th>
                     <th>Test Type</th>
-                    <th>Dictionary</th>
+
+                    <th>Total Answers Chosen</th>
+                    <th>Correct Answers</th>
+                    <th>Incorrect Answers</th>
+
+                    <!-- <th>Dictionary</th>
                     <th>Total Questions</th>
                     <th>Questions with Correct Answer</th>
                     <th>Total Correct Answers</th>
                     <th>User Chosen Answers</th>
                     <th>User Correct Answers</th>
-                    <th>Total False Positives</th>
+                    <th>Total False Positives</th> -->
                     <th>Test Date</th>
                 </tr>
-                {% for username, results in all_user_test_results.items %}
-                    <!-- User Header Row -->
+                {% for score in test_scores %}
+                <tr class="{{ score.type }}">
+                    <td>{{ score.user.username }}</td>
+                    <td>{{ score.type }}</td>
+                    <td>{{ score.total_answers_chosen }}</td>
+                    <td>{{ score.correct_answers_count }}</td>
+                    <td>{{ score.incorrect_answers_count }}</td>
+                    <td>{{ score.test_date }}</td>
+                </tr>
+                {% endfor %}
+                <!-- {% for username, results in all_user_test_results.items %}
                     <tr style="background-color: #e0e0e0;">
                         <td colspan="10"><strong>User: {{ username }}</strong></td>
                     </tr>
                     {% for result in results %}
-                    <!-- Individual Result Rows -->
                     <tr class="{{ result.test_type }}">
                         <td>{{ username }}</td>
                         <td>{{ result.test_type }}</td>
@@ -119,7 +132,8 @@
                         <td>{{ result.test_start_time|timezone:"Asia/Tokyo" }}</td>
                     </tr>
                     {% endfor %}
-                {% endfor %}
+                {% endfor %} -->
+                
             </table>
         </div>
     </div>
