@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'picsu.urls'
@@ -78,29 +80,34 @@ TEMPLATES = [
     },
 ]
 
+INTERNAL_IPS = [
+    # ... possibly other internal IPs ...
+    '127.0.0.1',
+]
+
 WSGI_APPLICATION = 'picsu.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "d6hssiijjd74g2",
-        "USER": "ufovivckbzphos",
-        "PASSWORD": "ca871d74abd3f93ce511438fffc529996d0f6c6c9ff36d26be0233a9a0606185",
-        "HOST": "ec2-35-169-11-108.compute-1.amazonaws.com",
-        "PORT": "5432",
-    }
-}
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "d6hssiijjd74g2",
+#         "USER": "ufovivckbzphos",
+#         "PASSWORD": "ca871d74abd3f93ce511438fffc529996d0f6c6c9ff36d26be0233a9a0606185",
+#         "HOST": "ec2-35-169-11-108.compute-1.amazonaws.com",
+#         "PORT": "5432",
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # settings.py
 
