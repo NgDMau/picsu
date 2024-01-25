@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY='l@3xk2yd2_8j3ucp*)$y6$yw6@!f(k4)#k)i8g#)49regie^m2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,12 +30,16 @@ ALLOWED_HOSTS = [
     "c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app",
     "picsu-2581564c76a3.herokuapp.com",
     "localhost",
-    "237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app"
+    "237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app",
+    "f23d-153-231-0-100.ngrok-free.app",
+    "2ec5-153-231-0-100.ngrok-free.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://c5cc-2001-df0-2ed-7202-ed48-1e21-1be-fc4b.ngrok-free.app',
                         'https://picsu-2581564c76a3.herokuapp.com',
-                        'https://237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app']
+                        'https://237c-2001-df0-2ed-7202-cf6-90e1-5da5-2768.ngrok-free.app',
+                        'https://f23d-153-231-0-100.ngrok-free.app',
+                        'https://2ec5-153-231-0-100.ngrok-free.app']
 
 # Application definition
 
@@ -91,23 +96,23 @@ WSGI_APPLICATION = 'picsu.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "d6hssiijjd74g2",
-        "USER": "ufovivckbzphos",
-        "PASSWORD": "ca871d74abd3f93ce511438fffc529996d0f6c6c9ff36d26be0233a9a0606185",
-        "HOST": "ec2-35-169-11-108.compute-1.amazonaws.com",
-        "PORT": "5432",
-    }
-}
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "d6hssiijjd74g2",
+#         "USER": "ufovivckbzphos",
+#         "PASSWORD": "ca871d74abd3f93ce511438fffc529996d0f6c6c9ff36d26be0233a9a0606185",
+#         "HOST": "ec2-35-169-11-108.compute-1.amazonaws.com",
+#         "PORT": "5432",
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # DATABASES = {
